@@ -1,35 +1,24 @@
-import Feed from "./components/Feed";
-import Rightbar from "./components/Rightbar";
-import Sidebar from "./components/Sidebar";
-import Box from "@mui/material/Box";
-import { createTheme, Stack, ThemeProvider } from "@mui/material";
-import Navbar from "./components/Navbar";
-import AddModel from "./components/AddModel";
-import { useState } from "react";
+import React from "react";
+import { Outlet, Route, Routes } from "react-router-dom";
+import Home from "./routes/home/home.component";
+import Navigation from "./routes/navigation/navigation.component";
+import Authentication from "./routes/authentication/authentication.component";
 
-function App() {
-  const [mode, setMode] = useState("light");
 
-  const darkTheme = createTheme({
-    palette: {
-      mode: mode,
-    },
-  });
+const Shop = () => {
+  return <h1>I am the shop page</h1>;
+};
+
+const App = () => {
   return (
-    <>
-      <ThemeProvider theme={darkTheme}>
-        <Box bgcolor={"background.default"} color={"text.primary"}>
-          <Navbar />
-          <Stack direction="row" spacing={2} justifyContent="space-between">
-            <Sidebar setMode={setMode} mode={mode} />
-            <Feed />
-            <Rightbar />
-          </Stack>
-          <AddModel />
-        </Box>
-      </ThemeProvider>
-    </>
+    <Routes>
+      <Route path="" element={<Navigation />}>
+        <Route index element={<Home />} />
+        <Route path="shop" element={<Shop />} />
+        <Route path="auth" element={<Authentication />} />
+      </Route>
+    </Routes>
   );
-}
+};
 
 export default App;
