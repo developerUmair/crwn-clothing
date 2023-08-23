@@ -22,16 +22,17 @@ const SignInForm = () => {
 
   const signInWithGoogle = async () => {
     // const response = await signInWithGooglePopup();
-    const { user } = await signInWithGooglePopup();
-    await createUserDocumentFromAuth(user);
+    await signInWithGooglePopup();
+
     // const userDocRef = await createUserDocumentFromAuth(user);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await signAuthUserWithEmailAndPassword(email, password);
-      console.log(response);
+      // const response = await signAuthUserWithEmailAndPassword(email, password);
+      const { user } = await signAuthUserWithEmailAndPassword(email, password);
+      // console.log(response);
       alert("Signed In successfully");
       setFormFields(defaultFormFields);
     } catch (error) {
@@ -50,7 +51,7 @@ const SignInForm = () => {
     }
   };
 
-  console.log(formFields);
+  // console.log(formFields);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
