@@ -2,23 +2,23 @@ import { useState } from "react";
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
+  signInWithGooglePopUp,
+  signInAuthUserWithEmailAndPassword,
 } from "../../utils/firebase/firebase.utils";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FormInput from "../form-input/form-input.component";
-import "./sign-up-form.styles.scss";
+import "./sign-in-form.styles.scss";
 import Button from "../button/button.component";
 
 const defaultFormFields = {
-  displayName: "",
   email: "",
   password: "",
-  confirmPassword: "",
 };
 
-const SignUpForm = () => {
+const SignInForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
-  const { displayName, email, password, confirmPassword } = formFields;
+  const { email, password } = formFields;
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -29,37 +29,48 @@ const SignUpForm = () => {
   // submitting the form
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (password !== confirmPassword) {
-      toast.error("Password doesn't match");
-      return;
-    }
     try {
-      //  const response =  await createAuthUserWithEmailAndPassword(email, password);
-      const { user } = await createAuthUserWithEmailAndPassword(
-        email,
-        password
-      );
-      await createUserDocumentFromAuth(user, { displayName });
-      toast.success("User created successfully");
+      const response = await signInAuthUserWithEmailAndPassword(email, password);
+      console.log(response);
+      toast.success("User Signed In successfully");
       setFormFields(defaultFormFields);
     } catch (error) {
-      console.log(error);
-      toast.error(`Error creating user: ${error.message}`);
+      switch(error.code){
+        case 'auth/invalid-login-credentials': 
+          toast.error('Incorrect password for email')
+          break;
+        case 'auth/user-not-found': 
+          toast.error('No user attached with this email')
+          break;
+        default:
+          toast.error(error.message);
+      }
+      // if(error.code === 'auth/invalid-login-credentials'){
+      //   toast.error('Incorrect password for email')
+      // } else {
+      //   toast.error(error.message);
+      // }
     }
+  };
+
+  const signInWithGoogle = async () => {
+    const response = await signInWithGooglePopUp();
+    const userDocRef = await createUserDocumentFromAuth(response.user);
+    console.log(userDocRef);
   };
 
   return (
     <div className="sign-up-container">
-      <h2>Don't have an account?</h2>
-      <span>Sign up with your email and password</span>
+      <h2>Already have an account?</h2>
+      <span>Sign in with your email and password</span>
       <form onSubmit={handleSubmit}>
-        <FormInput
+        {/* <FormInput
           label="Display Name:"
           type="text"
           name="displayName"
           onChange={handleChange}
           value={displayName}
-        />
+        /> */}
 
         <FormInput
           label="Email:"
@@ -76,18 +87,23 @@ const SignUpForm = () => {
           onChange={handleChange}
           value={password}
         />
-        <FormInput
+        {/* <FormInput
           label="Confirm Password:"
           type="password"
           name="confirmPassword"
           onChange={handleChange}
           value={confirmPassword}
-        />
-        <Button type="submit">Sign Up</Button>
+        /> */}
+        <div className="buttons-container">
+          <Button type="submit">Sign In</Button>
+          <Button type="button" onClick={signInWithGoogle} buttonType="google">
+            Google Sign In
+          </Button>
+        </div>
       </form>
       <ToastContainer />
     </div>
   );
 };
 
-export default SignUpForm;
+export default SignInForm;
