@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import FormInput from "../form-input/form-input.component";
 import "./sign-up-form.styles.scss";
 import Button from "../button/button.component";
+import { UserContext } from "../../contexts/user.context";
 
 const defaultFormFields = {
   displayName: "",
@@ -19,13 +20,14 @@ const defaultFormFields = {
 const SignUpForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
-
+  
   const handleChange = (event) => {
     const { name, value } = event.target;
-
     setFormFields({ ...formFields, [name]: value });
   };
 
+  const { setCurrentUser } = useContext(UserContext);
+  
   // submitting the form
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -39,6 +41,7 @@ const SignUpForm = () => {
         email,
         password
       );
+      setCurrentUser(user);
       await createUserDocumentFromAuth(user, { displayName });
       toast.success("User created successfully");
       setFormFields(defaultFormFields);
@@ -47,6 +50,7 @@ const SignUpForm = () => {
       toast.error(`Error creating user: ${error.message}`);
     }
   };
+
 
   return (
     <div className="sign-up-container">

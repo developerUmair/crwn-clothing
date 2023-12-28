@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import FormInput from "../form-input/form-input.component";
 import "./sign-in-form.styles.scss";
 import Button from "../button/button.component";
+import { UserContext } from "../../contexts/user.context";
 
 const defaultFormFields = {
   email: "",
@@ -19,6 +20,8 @@ const defaultFormFields = {
 const SignInForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
+
+  const { setCurrentUser } = useContext(UserContext);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -30,17 +33,20 @@ const SignInForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await signInAuthUserWithEmailAndPassword(email, password);
-      console.log(response);
+      const { user } = await signInAuthUserWithEmailAndPassword(
+        email,
+        password
+      );
+      setCurrentUser(user)
       toast.success("User Signed In successfully");
       setFormFields(defaultFormFields);
     } catch (error) {
-      switch(error.code){
-        case 'auth/invalid-login-credentials': 
-          toast.error('Incorrect password for email')
+      switch (error.code) {
+        case "auth/invalid-login-credentials":
+          toast.error("Incorrect password for email");
           break;
-        case 'auth/user-not-found': 
-          toast.error('No user attached with this email')
+        case "auth/user-not-found":
+          toast.error("No user attached with this email");
           break;
         default:
           toast.error(error.message);
