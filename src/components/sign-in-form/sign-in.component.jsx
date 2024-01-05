@@ -10,7 +10,6 @@ import "react-toastify/dist/ReactToastify.css";
 import FormInput from "../form-input/form-input.component";
 import "./sign-in-form.styles.scss";
 import Button from "../button/button.component";
-import { UserContext } from "../../contexts/user.context";
 
 const defaultFormFields = {
   email: "",
@@ -20,8 +19,6 @@ const defaultFormFields = {
 const SignInForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
-
-  const { setCurrentUser } = useContext(UserContext);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -33,11 +30,8 @@ const SignInForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const { user } = await signInAuthUserWithEmailAndPassword(
-        email,
-        password
-      );
-      setCurrentUser(user)
+      await signInAuthUserWithEmailAndPassword(email, password);
+      // setCurrentUser(user)
       toast.success("User Signed In successfully");
       setFormFields(defaultFormFields);
     } catch (error) {
@@ -60,9 +54,8 @@ const SignInForm = () => {
   };
 
   const signInWithGoogle = async () => {
-    const response = await signInWithGooglePopUp();
-    const userDocRef = await createUserDocumentFromAuth(response.user);
-    console.log(userDocRef);
+    await signInWithGooglePopUp();
+    
   };
 
   return (

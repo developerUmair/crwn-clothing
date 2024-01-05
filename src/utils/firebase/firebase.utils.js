@@ -8,7 +8,8 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  onAuthStateChanged
 } from "firebase/auth";
 
 import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
@@ -89,3 +90,6 @@ export const signOutUser = async () => {
     toast.error(`Error signing out: ${error.message}`);
   }
 };
+
+// on auth state change
+export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback)

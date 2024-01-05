@@ -10,7 +10,7 @@ const Home = () => {
       {/* <Outlet /> */}
       <h1 style={{ textAlign: "center" }}>Welcome to Crown Clothing</h1>
       <CategoryDirectory />
-      <div style={{ display: "block", margin: "0 auto" }}>
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <Link to="/shop">View All</Link>
       </div>
     </>

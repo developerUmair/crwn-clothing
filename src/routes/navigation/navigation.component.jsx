@@ -1,24 +1,17 @@
 import React, { useContext } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { ReactComponent as CrownLogo } from "../../assets/crown.svg";
 import "./navigation.style.scss";
 import { UserContext } from "../../contexts/user.context";
-import { auth, signOutUser } from "../../utils/firebase/firebase.utils";
-import { toast } from "react-toastify";
+import { signOutUser } from "../../utils/firebase/firebase.utils";
+import CartIcon from "../../components/cart-icon/cart-icon.component";
+import CartDropdown from "../../components/cart-dropdown/cart-dropdown.component";
+import { CartContext } from "../../contexts/cart.context";
 
 const Navigation = () => {
-  const { currentUser, setCurrentUser } = useContext(UserContext);
-  const navigate = useNavigate();
+  const { currentUser } = useContext(UserContext);
+  const { isCartOpen } = useContext(CartContext);
 
-  // handle sign out
-
-  const handleSignOut = async () => {
-    await signOutUser();
-    setCurrentUser(null);
-    navigate("/");
-    toast.success(`User Signed out successfully`);
-  };
-  console.log(currentUser);
   return (
     <>
       <div className="navigation">
@@ -30,7 +23,7 @@ const Navigation = () => {
             SHOP
           </Link>
           {currentUser ? (
-            <span className="nav-link" onClick={handleSignOut}>
+            <span className="nav-link" onClick={signOutUser}>
               SIGN OUT
             </span>
           ) : (
@@ -38,7 +31,9 @@ const Navigation = () => {
               SIGN IN
             </Link>
           )}
+          <CartIcon />
         </div>
+        {isCartOpen && <CartDropdown />}
       </div>
       <Outlet />
     </>
