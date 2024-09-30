@@ -1,9 +1,9 @@
 import React from "react";
-import "./category-item.style.scss";
+import "./directory-item.style.scss";
 
-const CatergoryItem = ({ category }) => {
+const DirectoryItem = ({ category }) => {
   return (
-    <div className="category-container">
+    <div className="directory-item-container">
       <div
         className="background-image"
         style={{
@@ -11,7 +11,7 @@ const CatergoryItem = ({ category }) => {
         }}
       />
       {/* <img src={category.imageUrl} alt={`${category.title} image here`} /> */}
-      <div className="category-body-container">
+      <div className="directory-item-body">
         <h2>{category.title}</h2>
         <p>Shop Now</p>
       </div>
@@ -19,4 +19,4 @@ const CatergoryItem = ({ category }) => {
   );
 };
 
-export default CatergoryItem;
+export default DirectoryItem;
