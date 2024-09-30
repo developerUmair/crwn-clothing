@@ -6,7 +6,7 @@ export const BackgroundImage = styled.div`
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-image: ${({ imageUrl }) => `url(${imageUrl})`};
+    background-image: ${({ imageurl }) => `url(${imageurl})`};
 `;
 
 export const DirectoryItemBody = styled.div`
