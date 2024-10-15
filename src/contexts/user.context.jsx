@@ -4,6 +4,7 @@ import {
   onAuthStateChangedListener,
   signOutUser,
 } from "../utils/firebase/firebase.utils";
+import { setCurrentUser } from "../store/user/user.action";
 
 export const UserContext = createContext({
   currentUser: null,
@@ -39,26 +40,11 @@ export const UserProvider = ({ children }) => {
   const { currentUser } = state;
   console.log(currentUser);
 
-  const setCurrentUser = (user) => {
-    dispatch({ type: USER_ACTION_TYPES.SET_CURRENT_USER, payload: user });
-  };
-
+  
   const value = { currentUser, setCurrentUser };
 
   // signOutUser();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChangedListener((user) => {
-      if (user) {
-        createUserDocumentFromAuth(user);
-      }
-      setCurrentUser(user);
-      console.log(user);
-    });
-
-    return () => {
-      unsubscribe(); // Unsubscribe when the component unmounts
-    };
-  }, []);
+  
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

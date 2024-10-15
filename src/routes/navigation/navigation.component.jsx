@@ -12,9 +12,10 @@ import { signOutUser } from "../../utils/firebase/firebase.utils";
 import CartIcon from "../../components/cart-icon/cart-icon.component";
 import CartDropdown from "../../components/cart-dropdown/cart-dropdown.component";
 import { CartContext } from "../../contexts/cart.context";
+import { useSelector } from "react-redux";
 
 const Navigation = () => {
-  const { currentUser } = useContext(UserContext);
+  const currentUser = useSelector((state) => state.user.currentUser);
   const { isCartOpen } = useContext(CartContext);
 
   return (
@@ -26,7 +27,7 @@ const Navigation = () => {
         <NavLinksContainer>
           <NavLink to="shop">SHOP</NavLink>
           {currentUser ? (
-            <NavLink as='span' onClick={signOutUser}>
+            <NavLink as="span" onClick={signOutUser}>
               SIGN OUT
             </NavLink>
           ) : (
